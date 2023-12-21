@@ -38,7 +38,7 @@ h1{
     font-size: 14px;
     width: 60%;
     padding: 16px;
-    color: rgb(213,67, 41)
+    color: slateblue;
 }
 
 #buttonInput{
@@ -50,3 +50,11 @@ h1{
     color: white;
     border-radius: 10px;
 }
+
+.userText{
+    font-family: monospace;
+    font-size: 14px;
+    text-align: right;
+    line-height: 25px;
+    color: rgb(109,111,109);
+    
