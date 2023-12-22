@@ -1,10 +1,20 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
 from chatterbot import ChatBot
-from chatterbot.trainers import ListTrainer
+from chatterbot.trainers import ListTrainer, ChatterBotCorpusTrainer
 
-bot = ChatBot("chatbot", read_only=False, logic_adapters=["chatterbot.logic.BestMatch"])
+bot = ChatBot(
+    "chatbot",
+    read_only=False,
+    logic_adapters=[
+        {
+            "import_path": "chatterbot.logic.BestMatch",
+            #     "default_response": "Sorry, I don't know what that means",
+            #     "maximum_similarity_threshold": 0.90,
+        }
+    ],
+)
 
 list_to_train = [
     "hi",
@@ -13,10 +23,17 @@ list_to_train = [
     "I'm just a chatbot",
     "What is your favorable food?",
     "I like cheese",
+    "what's your fav sport?",
+    "swimming",
+    "do you have children",
+    "no",
 ]
 
-list_trainer = ListTrainer(bot)
-list_trainer.train(list_to_train)
+chatterbotCorpusTrainer = ChatterBotCorpusTrainer(bot)
+chatterbotCorpusTrainer.train("chatterbot.corpus.english")
+
+# list_trainer = ListTrainer(bot)
+# list_trainer.train(list_to_train)
 
 
 def index(request):
@@ -29,4 +46,5 @@ def specific(request):
 
 def getResponse(request):
     userMessage = request.GET.get("userMessage")
-    return HttpResponse(userMessage)
+    chatResponse = bot.get_response(userMessage)
+    return HttpResponse(chatResponse)
